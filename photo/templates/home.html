@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Phot-o-Calorie</title>
+</head>
+<body>
+	<form method="post" action="/" enctype="multipart/form-data">{% csrf_token %}
+		<input type="file" name="Pic">
+		<br>
+		<button type="submit">Submit</button>
+	</form>
+</body>
+</html>
