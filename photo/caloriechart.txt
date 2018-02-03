@@ -1,3 +1,6 @@
-apple 100
-pizza 500
-sandwich 200
+apple 130 large 250
+banana 110 medium 126
+grapefruit 120 medium 308
+grapes 90 3/4
+sandwich 200 
+fries 250

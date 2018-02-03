@@ -1,14 +1,21 @@
 from django.shortcuts import render,redirect, render_to_response
-import requests, base64, os
+import requests, base64, os, csv
 from django.core.files.storage import FileSystemStorage
 
 calorie=dict()
-f=open('photo/caloriechart.txt','r')
-lines=f.readlines()
-for line in lines:
-	a=line.split()
-	calorie[a[0]]=a[1]
-f.close()
+f=csv.reader(open('photo/caloriechart.csv', 'rt'))
+data=[]
+for row in f:
+	data.append(row)
+data=data[1::]
+for row in data:
+	calorie[row[0]]=dict()
+	calorie[row[0]]['size']=row[1]
+	calorie[row[0]]['serving']=row[2]
+	calorie[row[0]]['calorie']=row[3]
+	calorie[row[0]]['fat']=row[4]
+	calorie[row[0]]['carbohydrate']=row[5]
+	calorie[row[0]]['protein']=row[6]
 
 def photoidentify(file):
 	headers = {
@@ -38,8 +45,8 @@ def photoidentify(file):
 	return None
 
 def home(request):
+	calorie.keys()
 	if request.FILES:
-		print ("Hi")
 		image=request.FILES["Pic"]
 		fs= FileSystemStorage()
 		filename = fs.save(image.name, image)
@@ -47,14 +54,18 @@ def home(request):
 		print (uploaded_file_url)
 		tags=photoidentify(uploaded_file_url)
 		contextdata={}
+		k=1
 		for tag in tags:
 			if tag in calorie.keys():
-				print (tag)
+				k=0
 				contextdata['food']=tag
-				contextdata['calorie']=calorie[tag]
-	#	if not contextdata['food']:
-	#		contextdata['food']="Cannot be identified"
-	#		contextdata['calorie']=None
+				for key in calorie[tag]:
+					contextdata[key]=calorie[tag][key]
+				break
+		if k:
+			contextdata['food']="Cannot be identified"
+			contextdata['calorie']=None
+		print (contextdata)
 		return render(request,'photo/result.html',contextdata)
 	return render(request,'photo/home.html')
 
