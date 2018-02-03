@@ -1,7 +1,14 @@
-from django.shortcuts import render,redirect
-import requests, base64
+from django.shortcuts import render,redirect, render_to_response
+import requests, base64, os
 from django.core.files.storage import FileSystemStorage
-import os
+
+calorie=dict()
+f=open('photo/caloriechart.txt','r')
+lines=f.readlines()
+for line in lines:
+	a=line.split()
+	calorie[a[0]]=a[1]
+f.close()
 
 def photoidentify(file):
 	headers = {
@@ -23,10 +30,12 @@ def photoidentify(file):
 		print (data)
 		try:
 			print("Tags: ",data['description']['tags'])
+			return data['description']['tags']
 		except:
 			pass
 	except Exception as e:
 		print("[Errno {0}] {1}".format(e.errno, e.strerror))
+	return None
 
 def home(request):
 	if request.FILES:
@@ -36,5 +45,19 @@ def home(request):
 		filename = fs.save(image.name, image)
 		uploaded_file_url = fs.url(filename)
 		print (uploaded_file_url)
-		photoidentify(uploaded_file_url)
-	return render(request,'home.html')
+		tags=photoidentify(uploaded_file_url)
+		contextdata={}
+		for tag in tags:
+			if tag in calorie.keys():
+				print (tag)
+				contextdata['food']=tag
+				contextdata['calorie']=calorie[tag]
+	#	if not contextdata['food']:
+	#		contextdata['food']="Cannot be identified"
+	#		contextdata['calorie']=None
+		return render(request,'photo/result.html',contextdata)
+	return render(request,'photo/home.html')
+
+def result(request):
+	
+	return render(request,'photo/result.html')
