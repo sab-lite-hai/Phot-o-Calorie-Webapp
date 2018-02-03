@@ -2,9 +2,10 @@ from django.shortcuts import render,redirect, render_to_response
 import requests, base64, os, csv
 from django.core.files.storage import FileSystemStorage
 import pymysql.cursors
+import datetime
 
 def connect():
-	connection=pymysql.connect(host='localhost',user='user',password='qwerty123',db='photocalorie',charset='utf8mb4',cursorclass=pymysql.cursors.DictCursor)
+	connection=pymysql.connect(host='localhost',user='root',password='qwerty123',db='photocalorie',charset='utf8mb4',cursorclass=pymysql.cursors.DictCursor)
 	return connection
 
 def disconnect(connection):
@@ -70,13 +71,14 @@ def home(request):
 					contextdata[key]=calorie[tag][key]
 				break
 		if k:
-			contextdata['food']="Cannot be identified"
-			contextdata['calorie']=None
+			contextdata={'food':"Cannot be identified",'size':None,'serving':None,'calorie':None,'fat':None, 'carbohydrate':None, 'protein':None}
 		print (contextdata)
 		return render(request,'photo/result.html',contextdata)
 	return render(request,'photo/home.html')
 
 def dashboard(request):
+	connection=connect()
+	cursor=connection.cursor()
 	cal=request.POST.get('calorie')
 	pro=request.POST.get('protein')
 	fa=request.POST.get('fat')
@@ -89,29 +91,40 @@ def dashboard(request):
 		pro=float(pro)*factor
 		fa=float(fa)*factor
 		carb=float(carb)*factor
-		sql="insert into fooditem values('saurabhrathi12','%s','%f','%f','%f','%f',curdate())"%(fo,cal,fa,carb,pro)
-		try:
-			cursor.execute(sql)
-		except:
-			pass
-	contextdata={}
+		print (cal,pro,fa,carb,fo,factor)
+		sql="insert into consumption values('saurabhrathi12','%s','%f','%f','%f','%f',curdate())"%(fo,cal,fa,carb,pro)
+		cursor.execute(sql)
+		connection.commit()
+	disconnect(connection)
 	connection=connect()
 	cursor=connection.cursor()
-	sql="""select sum(calories), sum(fats), sum(carbohydrates), sum(proteins) from consumption where date=curdate()"""
+	contextdata={}
+	sql="""select sum(calories) as c, sum(fats) as f, sum(carbohydrates) as ca, sum(proteins) as p from consumption where date=curdate()"""
 	cursor.execute(sql)
 	result=cursor.fetchone()
-	contextdata['calorie']=result[0]
-	contextdata['fat']=result[1]
-	contextdata['carbohydrate']=result[2]
-	contextdata['protein']=result[3]
+	cursor.fetchall()
+	contextdata['calorie']=(int(result['c']*100))/100.0
+	contextdata['fat']=(int(result['f']*100))/100.0
+	contextdata['carbohydrate']=(int(result['ca']*100))/100.0
+	contextdata['protein']=(int(result['p']*100))/100.0
 	anydate=request.POST.get('anydate')
 	if not anydate:
 		anydate=datetime.date.today().strftime('%Y-%m-%d')
 	else:
 		anydate=datetime.datetime.strptime(anydate, '%Y-%m-%d').date()
-	query="""select fooditem,calories,fats,carbohydrates,proteins from consumption where date='%s')"""%(anydate)
-	cursor.execute(sql)
+	query="""select fooditem,calories,fats,carbohydrates,proteins from consumption where date='%s'"""%(anydate)
+	cursor.execute(query)
 	result=cursor.fetchall()
+	re=[]
+	for item in result:
+		a=[]
+		a.append(item['fooditem'])
+		a.append(item['calories'])
+		a.append(item['fats'])
+		a.append(item['carbohydrates'])
+		a.append(item['proteins'])
+		re.append(a)
+	result=re
 	contextdata['anydate']=anydate
 	contextdata['consumption']=result
 	return render(request,'photo/dashboard.html',contextdata)
