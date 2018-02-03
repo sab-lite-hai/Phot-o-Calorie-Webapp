@@ -1,18 +1,140 @@
-<!DOCTYPE html>
+{% load static %}
 <html>
-<head>
-	<title>Phot-o-Calorie</title>
-</head>
-<body>
-	<div>
-		<p>Food : {{food}}</p>
-		<p>Calories: {{calorie}}</p>
-		<p>Fats: {{fat}}g</p>
-		<p>Carbohydrates: {{carbohydrate}}g</p>
-		<p>Proteins: {{protein}}g</p>
+	<head>
+		<title>Phot-o-Calorie</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+	</head>
+	<body>
+
+		<!-- Header -->
+			<header id="header">
+				<div class="imonitor your diet and workout with step count feauturenner">
+					<a href="/" class="logo">Phot-o-Calorie</a>
+					<nav id="nav">
+						<a href="/">Home</a>
+						<a href="/dashboard">Dashboard</a>
+						<a href="/signout">Sign out</a>
+					</nav>
+				</div>
+			</header>
+			<a href="#menu" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+
+		<!-- Main -->
+			<section id="main">
+				<div class="inner">
+					<!-- Table -->
+						<section>
+							<h3>Consumption Table</h3>
+							
+							<div class="table-wrapper">
+								<table>
+									<thead>
+										<tr>
+											<th>S.no.</th>
+											<th>Description</th>
+											<th>Amount</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+
+
 		<p>The data is estimated for</p>
 		<p>Size: {{size}} {{food}}</p>
-		<p>Serving: {{serving}}g</p>
-	</div>
-</body>
+		<p>Serving: {{serving}}g</p>		<td>1</td>
+											<td>Food</td>
+											<td>{{food}}</td>
+										</tr>
+										<tr>
+											<td>2</td>
+											<td>Calories</td>
+											<td>{{calorie}}</td>
+										</tr>
+										<tr>
+											<td>3</td>
+											<td>Fats</td>
+											<td>{{fat}}g</td>
+										</tr>
+										<tr>
+											<td>4</td>
+											<td>Carbohydrates</td>
+											<td>{{carbohydrate}}g</td>
+										</tr>
+										<tr>
+											<td>5</td>
+											<td>Proteins</td>
+											<td>{{protein}}g</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							
+						</section>
+
+					<!-- Buttons -->
+<!-- 						<section>
+							<h3>Buttons</h3>
+							<ul class="actions">
+								
+								<li><a href="#" class="button">Default</a></li>
+								<li><a href="#" class="button alt">Alternate</a></li>
+							</ul>
+							<ul class="actions">
+								<li><a href="#" class="button special big">Big</a></li>
+								<li><a href="#" class="button">Default</a></li>
+								<li><a href="#" class="button alt small">Small</a></li>
+							</ul>
+							<div class="row">
+								<div class="6u 12u$(xsmall)">
+									<ul class="actions fit">
+										<li><a href="#" class="button fit">Fit</a></li>
+										<li><a href="#" class="button alt fit">Fit</a></li>
+									</ul>
+								</div>
+								<div class="6u$ 12u$(xsmall)">
+									<ul class="actions fit small">
+										<li><a href="#" class="button fit small">Fit + Small</a></li>
+										<li><a href="#" class="button alt fit small">Fit + Small</a></li>
+									</ul>
+								</div>
+							</div>
+							<ul class="actions">
+								<li><a href="#" class="button special icon fa-download">Icon</a></li>
+								<li><a href="#" class="button icon fa-download">Icon</a></li>
+								<li><a href="#" class="button alt icon fa-download">Icon</a></li>
+							</ul>
+							<ul class="actions">
+								<li><span class="button special disabled">Special</span></li>
+								<li><span class="button disabled">Default</span></li>
+								<li><span class="button alt disabled">Alternate</span></li>
+							</ul>
+						</section>
+ -->
+					<!-- Form -->
+						<section>
+							<h3>Consumption Factor</h3>
+							<form method="post" action="#">{% csrf_token %}
+								<div class="row uniform 50%">
+									<div class="6u 12u$(xsmall)">
+										<input type="hidden" name="calorie" id="demo-name" value="{{calorie}}" />
+										<input type="hidden" name="carbohydrate" id="demo-name" value="{{carbohydrate}}" />
+										<input type="hidden" name="protein" id="demo-name" value="{{protein}}" />
+										<input type="hidden" name="fat" id="demo-name" value="{{fat}}" />
+										<input type="hidden" name="food" id="demo-name" value="{{food}}" />
+										<input type="text" name="factor" id="demo-name" value="1" />
+										<br>
+										<button type="submit" class="button special">Submit</button>
+									</div>
+								</div>
+							</form>
+						</section>
+
+		<!-- Scripts -->
+			<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'assets/js/skel.min.js' %}"></script>
+			<script src="{% static 'assets/js/util.js' %}"></script>
+			<script src="{% static 'assets/js/main.js' %}"></script>
+	</body>
 </html>

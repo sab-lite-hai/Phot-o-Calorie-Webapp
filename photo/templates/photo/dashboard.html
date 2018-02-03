@@ -1,0 +1,110 @@
+{% load static %}
+<html>
+    <head>
+        <title>Phot-o-Calorie</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+    </head>
+    <body>
+
+        <!-- Header -->
+            <header id="header">
+                <div class="imonitor your diet and workout with step count feauturenner">
+                    <a href="/" class="logo">Phot-o-Calorie</a>
+                    <nav id="nav">
+                        <a href="/">Home</a>
+                        <a href="/dashboard">Dashboard</a>
+                        <a href="/signout">Sign out</a>
+                    </nav>
+                </div>
+            </header>
+            <a href="#menu" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+
+        <!-- Main -->
+            <section id="main">
+                <div class="inner">
+                    <!-- Table -->
+                        <section>
+                            <h3>Today's Consumption</h3>
+                            <h4>Date:- 04/02/2018</h4>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>S.no.</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Protein</td>
+                                            <td>{{protein}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Calories</td>
+                                            <td>{{calorie}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Fats</td>
+                                            <td>{{fat}}g</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Carbohydrates</td>
+                                            <td>{{carbohydrate}}g</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot> 
+                                    </tfoot>
+                                </table>
+                            </div>
+                            
+                        </section>
+                        <h3>Your Consumption Details on {{anydate}} : -</h3>
+                        <form method="post">{% csrf_token %}
+                            <input type="Date" name="anydate">                            
+                            <button class="button special">Submit</button> 
+                        </form>
+                    <!-- Form -->
+                        <section>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Calorie</th>
+                                            <th>Fat</th>
+                                            <th>Carbohydrates</th>
+                                            <th>Protein</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for row in consumption %}
+                                        <tr>
+                                            <td>{{row.0}}</td>
+                                            <td>{{row.1}}</td>
+                                            <td>{{row.2}}</td>
+                                            <td>{{row.3}}</td>
+                                            <td>{{row.4}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot> 
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                        </section>
+
+        <!-- Scripts -->
+            <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+            <script src="{% static 'assets/js/skel.min.js' %}"></script>
+            <script src="{% static 'assets/js/util.js' %}"></script>
+            <script src="{% static 'assets/js/main.js' %}"></script>
+    </body>
+</html>
