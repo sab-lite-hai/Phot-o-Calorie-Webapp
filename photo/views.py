@@ -3,6 +3,7 @@ import requests, base64, os, csv
 from django.core.files.storage import FileSystemStorage
 import pymysql.cursors
 import datetime
+from chatterbot import ChatBot
 
 def connect():
 	connection=pymysql.connect(host='localhost',user='root',password='qwerty123',db='photocalorie',charset='utf8mb4',cursorclass=pymysql.cursors.DictCursor)
@@ -10,6 +11,9 @@ def connect():
 
 def disconnect(connection):
 	connection.close()
+
+chatbot = ChatBot('Ron Obvious',trainer='chatterbot.trainers.ChatterBotCorpusTrainer')
+chatbot.train("chatterbot.corpus.english")
 
 calorie=dict()
 f=csv.reader(open('photo/caloriechart.csv', 'rt'))
@@ -128,3 +132,44 @@ def dashboard(request):
 	contextdata['anydate']=anydate
 	contextdata['consumption']=result
 	return render(request,'photo/dashboard.html',contextdata)
+
+def chat(request):
+	query=request.POST.get('query')
+	print(query)
+	connection=connect()
+	cursor=connection.cursor()
+	if query:
+		q=query.split()
+		print(q)
+		reply=None
+		for word in q:
+			if word in calorie.keys():
+				print(word)
+				reply="Here is what I found about "+word+"\n"
+				reply=reply+"For serving of "+calorie[word]['serving']+"g. It consists of calories "+calorie[word]['calorie']+", fat "+calorie[word]['fat']+"g, protein "+calorie[word]['protein']+"g, carbohydrate "+calorie[word]['carbohydrate']+"g."
+				break
+		if not reply:
+			reply=str(chatbot.get_response(query))
+		print(query,reply)
+		sql="insert into chat values('saurabhrathi12','%s','%s')"%(query,reply)
+		try:
+			cursor.execute(sql)
+			connection.commit()
+			disconnect(connection)
+			connection=connect()
+			cursor=connection.cursor()
+		except:
+			pass
+	sql="select query,reply from chat where user='saurabhrathi12'"
+	cursor.execute(sql)
+	replies=cursor.fetchall()
+	contextdata={}
+	r=[]
+	for i in replies:
+		a=[]
+		a.append(i['query'])
+		a.append(i['reply'])
+		r.append(a)
+	contextdata['replies']=r
+
+	return render(request,'photo/chat.html',contextdata)

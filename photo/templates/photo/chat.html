@@ -1,0 +1,52 @@
+{% load static %}
+<html>
+  <head>
+    <title>Phot-o-Calorie</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+  </head>
+  <body>
+
+    <!-- Header -->
+      <header id="header">
+        <div class="imonitor your diet and workout with step count feauturenner">
+          <a href="/" class="logo">Phot-o-Calorie</a>
+          <nav id="nav">
+            <a href="/">Home</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/chat">Chat</a>
+            <a href="/signout">Sign out</a>
+          </nav>
+        </div>
+      </header>
+            <a href="#menu" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+
+    <ol class="chat">
+    {% for i in replies %}
+    <li class="self">
+        <div class="avatar"><img src="https://i.imgur.com/HYcn9xO.png" draggable="false"/></div>
+      <div class="msg">
+        {{i.0}}
+      </div>
+    </li>
+    <li class="other">
+        <div class="avatar"><img src="https://i.imgur.com/DY6gND0.png" draggable="false"/></div>
+      <div class="msg">
+      {{i.1}}        
+      </div>
+    </li>
+    {% endfor %}
+    </ol>
+    <form action="" method="post" >{% csrf_token %}
+    <input class="textarea" type="text" name="query" placeholder="Type here!"/>
+    <div class="emojis"><button type="submit" class="button special" style="z-index: 101;right: 0px; position: fixed;" >Submit</button>     
+    </form>
+    
+</div>   
+
+          <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+      <script src="{% static 'assets/js/skel.min.js' %}"></script>
+      <script src="{% static 'assets/js/util.js' %}"></script>
+      <script src="{% static 'assets/js/main.js' %}"></script>
+</body>
