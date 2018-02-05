@@ -31,6 +31,7 @@ for row in data:
 	calorie[row[0]]['protein']=row[6]
 
 def photoidentify(file):
+#Replace the Subscription Key with Visual Recognition Cognitive Services API of Microsoft Azure
 	headers = {
 		'Content-Type': 'application/octet-stream',
 		'Ocp-Apim-Subscription-Key': '07df2be5e9fb46b498edf414f709a24a',
